@@ -7,15 +7,28 @@
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="../style.css">
 <link rel="icon" type="image/png" href="../mark.png">
+<style>
+  .button { display: block; text-align: center; padding: 15px 20px; border-radius: 18px; background: #3550d8; color: #fff; font-weight: 700; text-decoration: none; margin-top: 18px; }
+  .button[hidden] { display: none; }
+</style>
 </head>
 <body>
 <main>
 <header><img src="../mark.png" alt=""><a href="../">Selvo</a></header>
-<h1>Payment received.</h1>
+<h1>Payment received. 🎉</h1>
 <div class="card">
-<p>Your access is being switched on. Go back to Selvo: the app closes this page by itself once the payment is confirmed, usually within a few minutes.</p>
-<p lang="ru" class="soft"><strong>Оплата получена.</strong> Доступ включается. Вернитесь в Selvo: приложение само закроет эту страницу, как только платёж подтвердится, обычно в течение нескольких минут.</p>
+<p id="en">Your access is switching on. You can close this page and go back to Selvo.</p>
+<p lang="ru" class="soft" id="ru"><strong>Оплата получена.</strong> Доступ включается. Закройте эту страницу и вернитесь в Selvo.</p>
+<a class="button" id="back" href="https://t.me/SelvoAppBot" hidden>Back to Telegram</a>
 </div>
 </main>
+<script>
+  // ?via=tg: the order came from the Telegram bot, which has the access key ready in the chat.
+  if ((new URLSearchParams(location.search).get("via") || "").startsWith("tg")) {
+    document.getElementById("en").textContent = "Your access is switching on. Close this page: your access key is waiting in Telegram.";
+    document.getElementById("ru").innerHTML = "<strong>Оплата получена.</strong> Доступ включается. Закройте эту страницу: ключ доступа уже ждёт вас в Telegram.";
+    document.getElementById("back").hidden = false;
+  }
+</script>
 </body>
 </html>
