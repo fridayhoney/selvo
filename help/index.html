@@ -9,38 +9,19 @@
 <link rel="icon" type="image/png" href="../mark.png">
 <style>
   html, body { margin: 0; height: 100%; background: #f4f3ef; color: #1c1b19; font: 600 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-  #reopen { display: flex; height: 100%; align-items: center; justify-content: center; }
-  #reopen button { font: inherit; padding: 14px 22px; border: 0; border-radius: 18px; background: #3550d8; color: #fff; cursor: pointer; }
-  /* The chat fills the page, one 480 px column like the app (the SDK only does this under 667 px).
-     "body" outranks the SDK's own !important rules, injected after this sheet. Closed, it uncovers #reopen. */
-  body .woot-widget-holder { top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; margin: 0 auto !important;
-    width: min(480px, 100%) !important; height: 100% !important; max-height: none !important; border-radius: 0 !important; box-shadow: none !important; }
+  #open { display: flex; height: 100%; align-items: center; justify-content: center; }
+  #open a { padding: 14px 22px; border-radius: 18px; background: #3550d8; color: #fff; text-decoration: none; }
 </style>
 </head>
 <body>
-<div id="reopen"><button type="button" onclick="window.$chatwoot && window.$chatwoot.toggle('open')">Open the chat</button></div>
+<div id="open"><a id="chat" href="https://t.me/SelvoAppBot">Open the chat</a></div>
 <script>
-  // /help?id=<deviceId>: the app passes its device id so the team sees which device writes (no signature).
-  var deviceId = new URLSearchParams(location.search).get("id");
-  window.chatwootSettings = { hideMessageBubble: true, useBrowserLanguage: true };
-  window.addEventListener("chatwoot:ready", function () {
-    if (deviceId) window.$chatwoot.setUser("sv_" + deviceId, { name: "Device " + deviceId.slice(0, 8) });
-    window.$chatwoot.toggle("open");
-    // Straight to the conversation: Chatwoot has no setting to skip its home card, and the widget
-    // routes by hash, so a fragment change moves it to #/messages without reloading it.
-    var frame = document.querySelector(".woot-widget-holder iframe");
-    if (frame) frame.src = frame.src.split("#")[0] + "#/messages";
-  });
-  (function (d, t) {
-    var BASE_URL = "https://app.chatwoot.com";
-    var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
-    g.src = BASE_URL + "/packs/js/sdk.js";
-    g.async = true;
-    s.parentNode.insertBefore(g, s);
-    g.onload = function () {
-      window.chatwootSDK.run({ websiteToken: "oFXHxjdx7JGcCpgTRw6xipfV", baseUrl: BASE_URL });
-    };
-  })(document, "script");
+  // Support is the bot, no longer the web chat (operator, 28-10). /help?id=<deviceId> comes from the app:
+  // start=selvo_<id> links the chat to that device, as the app's own Telegram sign-in does (no signature).
+  var id = new URLSearchParams(location.search).get("id") || "";
+  var url = "https://t.me/SelvoAppBot" + (/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(id) ? "?start=selvo_" + id : "");
+  document.getElementById("chat").href = url;
+  location.replace(url);
 </script>
 </body>
 </html>
